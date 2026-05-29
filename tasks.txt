@@ -1,0 +1,3 @@
+Java lernen|true
+JavaScript lernen|false
+GIT lernen|false

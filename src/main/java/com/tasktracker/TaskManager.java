@@ -29,6 +29,16 @@ public class TaskManager {
 		return true;
 	}
 	
+	public boolean deleteTask(int index) {
+		if (index < 0 || index >= tasks.size()) {
+			return false;
+		}
+		
+		tasks.remove(index);
+		return true;
+		
+	}
+	
 	public String getTasksAsString() {
 		if (tasks.isEmpty()) {
 			return "Keine Tasks vorhanden.";
@@ -78,11 +88,7 @@ public class TaskManager {
 				
 				String title = parts[0];
 				boolean completed = Boolean.parseBoolean(parts[1]);
-				
-System.out.println("Line: " + line);				
-System.out.println("Title: " + title);				
-System.out.println("Completed: " + completed);				
-				
+								
 				Task task = new Task(title);
 				
 				if (completed) {

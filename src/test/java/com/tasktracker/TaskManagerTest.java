@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class TaskManagerTest {
-	
+	//1. Happy Path
 	@Test
 	void shouldAddTasktoList() {
 		TaskManager tm = new TaskManager();
@@ -59,6 +59,30 @@ public class TaskManagerTest {
 		tm.markTaskCompleted(0);
 		
 		assertEquals(true, tm.getTasks().get(0).isCompleted());
+	}
+	
+	
+	// 2. Edge cases
+	@Test
+	void shouldReturnFalseForNegativeIndex() {
+		TaskManager tm = new TaskManager();
+		
+		Boolean isIndexPositive = tm.markTaskCompleted(-1);
+		
+		assertEquals(false, isIndexPositive);
+		
+	}
+	
+	@Test
+	void shouldReturnFalseForIndexOutsideList() {
+		TaskManager tm = new TaskManager();
+		
+		tm.createTask("Java lernen");
+		tm.createTask("JavaScript lernen");		
+		Boolean isIndexPositive = tm.markTaskCompleted(2);
+		
+		assertEquals(false, isIndexPositive);
+		
 	}
 
 }

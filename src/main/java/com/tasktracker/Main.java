@@ -1,7 +1,6 @@
 package com.tasktracker;
 
 import java.util.Scanner;
-import java.util.ArrayList;
 
 public class Main {
 	public static void main(String[] args) {
@@ -17,7 +16,8 @@ public class Main {
 			System.out.println("1 - Task hinzufügen");
 			System.out.println("2 - Tasks anzeigen");
 			System.out.println("3 - Task erledigen");
-			System.out.println("4 - Beenden");
+			System.out.println("4 - Löschen");
+			System.out.println("5 - Beenden");
 			System.out.println("Auswahl: ");
 			
 			int choice = scanner.nextInt();
@@ -48,6 +48,18 @@ public class Main {
 					break;
 					
 				case 4:
+					System.out.println("Task-Nummer: ");
+					index = scanner.nextInt();
+					scanner.nextLine();
+					
+					boolean wasTaskDeletedCorrectly = taskManager.deleteTask(index - 1);
+					
+					if (!wasTaskDeletedCorrectly) {
+						System.out.println("Ungültiger Index!");
+					}
+					break;					
+					
+				case 5:
 					// Tasks vor dem Beenden speichern
 					taskManager.saveToFile();
 					System.out.println("Programm beendet");
