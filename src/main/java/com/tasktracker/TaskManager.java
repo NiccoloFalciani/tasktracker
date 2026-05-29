@@ -1,6 +1,7 @@
 package com.tasktracker;
 
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 import java.io.*;
 
 
@@ -11,8 +12,8 @@ public class TaskManager {
 		tasks = new ArrayList<>();
 	}
 	
-	public void createTask(String title) {
-		Task task = new Task(title);
+	public void createTask(String title, Priority priority) {
+		Task task = new Task(title, priority);
 		tasks.add(task);
 	}
 	
@@ -35,8 +36,46 @@ public class TaskManager {
 		}
 		
 		tasks.remove(index);
+		saveToFile();
+		
 		return true;
 		
+	}
+	
+	public ArrayList<Task> getOpenTasks() {		
+		return (ArrayList<Task>) tasks.stream()
+									  .filter(task -> !task.isCompleted())
+									  .collect(Collectors.toList());
+		
+	}
+	
+	public ArrayList<Task> getCompletedTasks() {		
+		return (ArrayList<Task>) tasks.stream()
+									  .filter(task -> task.isCompleted())
+									  .collect(Collectors.toList());
+		
+	}
+	
+	public boolean updateTaskTitle(int index, String newTitle) {
+		if (index < 0 || index >= tasks.size()) {
+			return false;
+		}
+		
+		tasks.get(index).setTitle(newTitle);
+		saveToFile();
+		
+		return true;
+	}
+	
+	public boolean updateTaskPriority(int index, Priority priority) {
+		if (index < 0 || index >= tasks.size()) {
+			return false;
+		}
+		
+		tasks.get(index).setPriority(priority);
+		saveToFile();
+		
+		return true;
 	}
 	
 	public String getTasksAsString() {
@@ -56,7 +95,7 @@ public class TaskManager {
 		return sb.toString();
 	}
 	
-	// Speichert den Titel des Tasks und den Flag, ob er abgeschlossen wurde, in der Datei tasks.txt
+	// Speichert den Titel des Tasks, den Flag, ob er abgeschlossen wurde, und die Priorität in der Datei tasks.txt
 	public void saveToFile() {
 		try (BufferedWriter writer = new BufferedWriter(new FileWriter("tasks.txt"))) {
 			
@@ -88,8 +127,9 @@ public class TaskManager {
 				
 				String title = parts[0];
 				boolean completed = Boolean.parseBoolean(parts[1]);
+				Priority priority = Priority.valueOf(parts[2]);
 								
-				Task task = new Task(title);
+				Task task = new Task(title, priority);
 				
 				if (completed) {
 					task.markAsCompleted();

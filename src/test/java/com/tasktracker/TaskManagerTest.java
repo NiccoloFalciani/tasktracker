@@ -9,7 +9,7 @@ public class TaskManagerTest {
 	void shouldAddTasktoList() {
 		TaskManager tm = new TaskManager();
 		
-		tm.createTask("Java lernen");
+		tm.createTask("Java lernen", Priority.HIGH);
 		
 		assertEquals(1, tm.getTasks().size());
 		
@@ -20,7 +20,7 @@ public class TaskManagerTest {
 		TaskManager tm = new TaskManager();
 		String expectedTitle = "GIT lernen";
 		
-		tm.createTask(expectedTitle);
+		tm.createTask(expectedTitle, Priority.HIGH);
 		String actualTitle = tm.getTasks().get(0).getTitle();
 		
 		assertEquals(expectedTitle, actualTitle);
@@ -31,9 +31,9 @@ public class TaskManagerTest {
 	void shouldAddMultipleTasks() {
 		TaskManager tm = new TaskManager();
 		
-		tm.createTask("Java lernen");
-		tm.createTask("JavaScript lernen");
-		tm.createTask("GIT lernen");
+		tm.createTask("Java lernen", Priority.HIGH);
+		tm.createTask("JavaScript lernen", Priority.HIGH);
+		tm.createTask("GIT lernen", Priority.HIGH);
 		
 		assertEquals(3, tm.getTasks().size());
 
@@ -43,8 +43,8 @@ public class TaskManagerTest {
 	void shouldPreserveTaskOrder() {
 		TaskManager tm = new TaskManager();
 		
-		tm.createTask("Java lernen");
-		tm.createTask("JavaScript lernen");
+		tm.createTask("Java lernen", Priority.HIGH);
+		tm.createTask("JavaScript lernen", Priority.HIGH);
 
 		assertEquals("Java lernen", tm.getTasks().get(0).getTitle());
 		assertEquals("JavaScript lernen", tm.getTasks().get(1).getTitle());
@@ -55,7 +55,7 @@ public class TaskManagerTest {
 	void shouldMarkTaskAsCompleted() {
 		TaskManager tm = new TaskManager();
 
-		tm.createTask("Java lernen");
+		tm.createTask("Java lernen", Priority.HIGH);
 		tm.markTaskCompleted(0);
 		
 		assertEquals(true, tm.getTasks().get(0).isCompleted());
@@ -77,8 +77,8 @@ public class TaskManagerTest {
 	void shouldReturnFalseForIndexOutsideList() {
 		TaskManager tm = new TaskManager();
 		
-		tm.createTask("Java lernen");
-		tm.createTask("JavaScript lernen");		
+		tm.createTask("Java lernen", Priority.HIGH);
+		tm.createTask("JavaScript lernen", Priority.HIGH);		
 		Boolean isIndexPositive = tm.markTaskCompleted(2);
 		
 		assertEquals(false, isIndexPositive);
