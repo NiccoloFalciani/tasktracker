@@ -1,1 +1,3 @@
-Java lernen|false
+Java lernen|false|HIGH|2027-05-29
+GIT lernen|false|HIGH|2027-05-29
+HTML lernen|false|HIGH|2027-01-01

@@ -3,6 +3,7 @@ package com.tasktracker;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 import java.io.*;
+import java.time.LocalDate;
 
 
 public class TaskManager {
@@ -12,8 +13,8 @@ public class TaskManager {
 		tasks = new ArrayList<>();
 	}
 	
-	public void createTask(String title, Priority priority) {
-		Task task = new Task(title, priority);
+	public void createTask(String title, Priority priority, LocalDate dueDate) {
+		Task task = new Task(title, priority, dueDate);
 		tasks.add(task);
 	}
 	
@@ -56,6 +57,50 @@ public class TaskManager {
 		
 	}
 	
+	public ArrayList<Task> getOverdueTasks() {
+		return (ArrayList<Task>) tasks.stream()
+									  .filter(task -> !task.isCompleted() && task.getDueDate().isBefore(LocalDate.now()))
+									  .collect(Collectors.toList());
+	}
+	
+	public ArrayList<Task> filterTasks(String query, Priority priority, LocalDate beforeDate){
+		
+		ArrayList<Task> result = new ArrayList<Task>();
+		
+		for (Task task : tasks) {
+			
+			boolean matches = true;
+			
+			// title filter
+			if (query != null && !query.isEmpty()) {
+				if (!task.getTitle().toLowerCase().contains(query.toLowerCase())) {
+					matches = false;
+				}
+			}
+			
+			// priority filter
+			if (priority != null) {
+				if (task.getPriority() != priority) {
+					matches = false;
+				}
+			}
+			
+			// due date filter
+			if (beforeDate != null) {
+				if (task.getDueDate().isAfter(beforeDate)) {
+					matches = false;
+				}
+			}
+			
+			if (matches) {
+				result.add(task);
+			}
+		}
+		
+		return result;
+		
+	}
+	
 	public boolean updateTaskTitle(int index, String newTitle) {
 		if (index < 0 || index >= tasks.size()) {
 			return false;
@@ -80,7 +125,7 @@ public class TaskManager {
 	
 	public String getTasksAsString() {
 		if (tasks.isEmpty()) {
-			return "Keine Tasks vorhanden.";
+			return "No tasks available.";
 		}
 		
 		StringBuilder sb = new StringBuilder();
@@ -95,21 +140,19 @@ public class TaskManager {
 		return sb.toString();
 	}
 	
-	// Speichert den Titel des Tasks, den Flag, ob er abgeschlossen wurde, und die Priorität in der Datei tasks.txt
 	public void saveToFile() {
 		try (BufferedWriter writer = new BufferedWriter(new FileWriter("tasks.txt"))) {
 			
 			for (Task task : tasks) {
-				writer.write(task.getTitle() + "|" + task.isCompleted());
+				writer.write(task.getTitle() + "|" + task.isCompleted() + "|" + task.getPriority() + "|" + task.getDueDate());
 				writer.newLine();
 			}
 			
 		} catch (IOException e) {
-			System.out.println("Fehler beim Speichern!");
+			System.out.println("Failed to save!");
 		}
 	}
 	
-	// Lädt die Informationen zu den Tasks
 	public void loadFromFile() {
 		
 		File file = new File("tasks.txt");
@@ -123,13 +166,14 @@ public class TaskManager {
 			String line;
 			
 			while ((line = reader.readLine()) != null) {
-				String[] parts = line.split("\\|");  // der Inhalt wird nach "|" zersplittert
+				String[] parts = line.split("\\|"); 
 				
 				String title = parts[0];
 				boolean completed = Boolean.parseBoolean(parts[1]);
 				Priority priority = Priority.valueOf(parts[2]);
+				LocalDate dueDate = LocalDate.parse(parts[3]);
 								
-				Task task = new Task(title, priority);
+				Task task = new Task(title, priority, dueDate);
 				
 				if (completed) {
 					task.markAsCompleted();
@@ -138,7 +182,7 @@ public class TaskManager {
 				tasks.add(task);
 			}
 		} catch (IOException e) {
-			System.out.println("Fehler beim Laden!");
+			System.out.println("Failed to save!");
 		}
 
 		
