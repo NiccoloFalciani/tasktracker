@@ -2,7 +2,7 @@ package com.tasktracker;
 
 import java.time.LocalDate;
 
-public class Task {
+public class Task implements Reportable {
 	
 	private String title;
 	private boolean completed;
@@ -33,6 +33,25 @@ public class Task {
 		return dueDate;
 	}
 	
+	public SlaStatus getSlaStatus() {
+		
+		LocalDate today = LocalDate.now();
+		
+		if (completed) {
+			return SlaStatus.GREEN;
+		}
+		
+		if (!completed && dueDate.isBefore(today)) {
+			return SlaStatus.RED;
+		}		
+		
+		if (!completed && !dueDate.isAfter(today.plusDays(3))) {
+			return SlaStatus.YELLOW;
+		}
+		
+		return SlaStatus.GREEN;
+	}
+	
 	// Setter
 	public void markAsCompleted() {
 		this.completed = true;
@@ -50,7 +69,7 @@ public class Task {
 		this.dueDate = dueDate;
 	}
 	
-	// Anzeige in der Konsole
+	// Content to be printed
 	@Override
 	public String toString() {	
 		return (completed ? "[x] " + title : "[ ] " + title + " (" + priority + ") - due date: " + dueDate.format(DateUtils.DATE_FORMATTER));
