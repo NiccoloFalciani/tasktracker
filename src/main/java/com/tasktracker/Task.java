@@ -37,15 +37,15 @@ public class Task implements Reportable {
 		
 		LocalDate today = LocalDate.now();
 		
-		if (completed) {
+		if (isCompleted()) {
 			return SlaStatus.GREEN;
 		}
 		
-		if (!completed && dueDate.isBefore(today)) {
+		if (!isCompleted() && getDueDate().isBefore(today)) {
 			return SlaStatus.RED;
 		}		
 		
-		if (!completed && !dueDate.isAfter(today.plusDays(3))) {
+		if (!isCompleted() && !getDueDate().isAfter(today.plusDays(3))) {
 			return SlaStatus.YELLOW;
 		}
 		

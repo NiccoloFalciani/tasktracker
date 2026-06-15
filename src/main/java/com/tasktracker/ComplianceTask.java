@@ -19,5 +19,24 @@ public class ComplianceTask extends Task {
 				+ " | Regulation: " + regulationId
 				+ " | Risk level: " + riskLevel;
 	}
+	
+	@Override
+	public SlaStatus getSlaStatus() {
+		LocalDate today = LocalDate.now();
+		
+		if (isCompleted()) {
+			return SlaStatus.GREEN;
+		}
+		
+		if (!isCompleted() && getDueDate().isBefore(today)) {
+			return SlaStatus.RED;
+		}		
+		
+		if (!isCompleted() && !getDueDate().isAfter(today.plusDays(5))) {
+			return SlaStatus.YELLOW;
+		}
+		
+		return SlaStatus.GREEN;			
+	}
 
 }

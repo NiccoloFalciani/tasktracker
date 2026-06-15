@@ -21,4 +21,23 @@ public class ReportingTask extends Task {
 				+ (reportName == null ? "N/A" : reportName);
 		
 	}
+	
+	@Override
+	public SlaStatus getSlaStatus() {
+		LocalDate today = LocalDate.now();
+		
+		if (isCompleted()) {
+			return SlaStatus.GREEN;
+		}
+		
+		if (!isCompleted() && getDueDate().isBefore(today)) {
+			return SlaStatus.RED;
+		}		
+		
+		if (!isCompleted() && !getDueDate().isAfter(today.plusDays(10))) {
+			return SlaStatus.YELLOW;
+		}
+		
+		return SlaStatus.GREEN;		
+	}
 }
