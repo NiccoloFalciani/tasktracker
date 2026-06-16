@@ -2,7 +2,7 @@ package com.tasktracker;
 
 import java.time.LocalDate;
 
-public class ReportingTask extends Task {
+public class ReportingTask extends Task implements SlaEvaluatable {
 	
 	private String reportName;
 
@@ -16,7 +16,7 @@ public class ReportingTask extends Task {
 	
 	@Override
 	public String toString() {
-		return super.toString() 
+		return TaskType.REPORTING +"  | " + super.toString() 
 				+ " | Report: "
 				+ (reportName == null ? "N/A" : reportName);
 		
@@ -39,5 +39,9 @@ public class ReportingTask extends Task {
 		}
 		
 		return SlaStatus.GREEN;		
+	}
+	
+	public String getReportName() {
+		return reportName;
 	}
 }

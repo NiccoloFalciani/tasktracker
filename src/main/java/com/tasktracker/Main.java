@@ -26,9 +26,10 @@ public class Main {
 			System.out.println("6 - Show completed tasks");
 			System.out.println("7 - Rename task");
 			System.out.println("8 - Change task priority");
-			System.out.println("9 - Show overdue tasks");
-			System.out.println("10 - Search tasks");
-			System.out.println("11 - Exit application");
+			System.out.println("9 - Change due date");
+			System.out.println("10 - Show overdue tasks");
+			System.out.println("11 - Search tasks");
+			System.out.println("12 - Exit application");
 			System.out.println("Selection: ");
 			
 			int choice = scanner.nextInt();
@@ -36,14 +37,34 @@ public class Main {
 			
 			switch (choice) {
 			
-				case 1:
+				case 1:	
+					String reportName = null;
+					String regulationId = null;
+					String riskLevel = null;
+										;
 					System.out.println("Task title: ");
 					String title = scanner.nextLine();
 					
 					Priority priority = readPriority(scanner, false);
 					LocalDate dueDate = readDueDate(scanner, false);
+					
+					TaskType taskType = readTaskType(scanner);
+					
+					if (taskType == TaskType.REPORTING) {
+						
+						System.out.println("Report name: ");
+						reportName = scanner.nextLine();
+						
+					} else if (taskType == TaskType.COMPLIANCE) {
+						
+						System.out.println("Regulation ID: ");
+						regulationId = scanner.nextLine();
+						
+						System.out.println("Risk level:");
+						riskLevel = scanner.nextLine();
+					}					
 							
-					taskManager.createTask(title, priority, dueDate);
+					taskManager.createTask(taskType, title, priority, dueDate, reportName, regulationId, riskLevel);
 					break;
 					
 				case 2:
@@ -115,14 +136,28 @@ public class Main {
 						System.out.println("Invalid index!");
 					}	
 					break;
-				
+					
 				case 9:
+					System.out.println("Task number: ");
+					index = scanner.nextInt();
+					scanner.nextLine();
+					
+					dueDate = readDueDate(scanner, false);
+					
+					boolean wasDueDateChangedCorrectly = taskManager.updateDueDate(index - 1, dueDate);
+					
+					if (!wasDueDateChangedCorrectly) {
+						System.out.println("Invalid index!");
+					}
+					break;
+				
+				case 10:
 
 					ArrayList<Task> overdueTasks = taskManager.getOverdueTasks();					
 					ConsoleUI.printTasks(overdueTasks);														
 					break;
 					
-				case 10:
+				case 11:
 					System.out.println("Search text (or empty): ");
 					String query = scanner.nextLine();				
 					
@@ -134,7 +169,7 @@ public class Main {
 					ConsoleUI.printTasks(filteredTasks);									
 					break;
 					
-				case 11:
+				case 12:
 					taskManager.saveToFile();
 					System.out.println("Program terminated");
 					scanner.close();
@@ -194,6 +229,37 @@ public class Main {
 		}		
 		
 		return dueDate;
+	}
+	
+	private static TaskType readTaskType(Scanner scanner) {
+		TaskType taskType = null;
+		
+		while (taskType == null) {
+			System.out.println("Task type:");
+			System.out.println("1 - STANDARD");
+			System.out.println("2 - REPORTING");
+			System.out.println("3 - COMPLIANCE");
+			
+			String input = scanner.nextLine();
+			
+			switch (input) {
+				case "1":
+					taskType = TaskType.STANDARD;
+					break;
+				case "2":
+					taskType = TaskType.REPORTING;
+					break;
+				case "3":
+					taskType = TaskType.COMPLIANCE;
+					break;
+					
+				default:
+					System.out.println("Invalid input!");
+			}			
+		}
+		
+		return taskType;
+			
 	}
 
 }

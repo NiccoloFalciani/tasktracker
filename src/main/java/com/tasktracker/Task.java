@@ -2,7 +2,7 @@ package com.tasktracker;
 
 import java.time.LocalDate;
 
-public class Task implements Reportable {
+public class Task {
 	
 	private String title;
 	private boolean completed;
@@ -72,7 +72,9 @@ public class Task implements Reportable {
 	// Content to be printed
 	@Override
 	public String toString() {	
-		return (completed ? "[x] " + title : "[ ] " + title + " (" + priority + ") - due date: " + dueDate.format(DateUtils.DATE_FORMATTER));
+		String output = completed ? "[x] " : "[ ] ";
+		output = output + title + " (" + priority + ") - due date: " + dueDate.format(DateUtils.DATE_FORMATTER);
+		return output;
 	}
 
 }

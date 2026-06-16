@@ -2,7 +2,7 @@ package com.tasktracker;
 
 import java.time.LocalDate;
 
-public class ComplianceTask extends Task {
+public class ComplianceTask extends Task implements SlaEvaluatable {
 	
 	private String regulationId;
 	private String riskLevel;
@@ -15,7 +15,7 @@ public class ComplianceTask extends Task {
 	
 	@Override 
 	public String toString() {
-		return super.toString()
+		return TaskType.COMPLIANCE +" | " + super.toString()
 				+ " | Regulation: " + regulationId
 				+ " | Risk level: " + riskLevel;
 	}
@@ -37,6 +37,14 @@ public class ComplianceTask extends Task {
 		}
 		
 		return SlaStatus.GREEN;			
+	}
+	
+	public String getRegulationId() {
+		return regulationId;
+	}
+	
+	public String getRiskLevel() {
+		return riskLevel;
 	}
 
 }

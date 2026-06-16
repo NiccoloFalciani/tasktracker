@@ -11,7 +11,7 @@ public class TaskManagerTest {
 	void shouldAddTasktoList() {
 		TaskManager tm = new TaskManager();
 		
-		tm.createTask("Learn Java", Priority.HIGH, LocalDate.now());
+		tm.createTask(TaskType.STANDARD, "Learn Java", Priority.HIGH, LocalDate.now(), null, null, null);
 		
 		assertEquals(1, tm.getTasks().size());
 		
@@ -22,7 +22,7 @@ public class TaskManagerTest {
 		TaskManager tm = new TaskManager();
 		String expectedTitle = "Learn GIT";
 		
-		tm.createTask(expectedTitle, Priority.HIGH, LocalDate.now());
+		tm.createTask(TaskType.STANDARD, expectedTitle, Priority.HIGH, LocalDate.now(), null, null, null);
 		String actualTitle = tm.getTasks().get(0).getTitle();
 		
 		assertEquals(expectedTitle, actualTitle);
@@ -33,9 +33,9 @@ public class TaskManagerTest {
 	void shouldAddMultipleTasks() {
 		TaskManager tm = new TaskManager();
 		
-		tm.createTask("Learn Java", Priority.HIGH, LocalDate.now());
-		tm.createTask("Learn JavaScript", Priority.HIGH, LocalDate.now());
-		tm.createTask("Learn GIT", Priority.HIGH, LocalDate.now());
+		tm.createTask(TaskType.STANDARD, "Learn Java", Priority.HIGH, LocalDate.now(), null, null, null);
+		tm.createTask(TaskType.STANDARD, "Learn JavaScript", Priority.HIGH, LocalDate.now(), null, null, null);
+		tm.createTask(TaskType.STANDARD, "Learn GIT", Priority.HIGH, LocalDate.now(), null, null, null);
 		
 		assertEquals(3, tm.getTasks().size());
 
@@ -45,8 +45,8 @@ public class TaskManagerTest {
 	void shouldPreserveTaskOrder() {
 		TaskManager tm = new TaskManager();
 		
-		tm.createTask("Learn Java", Priority.HIGH, LocalDate.now());
-		tm.createTask("Learn JavaScript", Priority.HIGH, LocalDate.now());
+		tm.createTask(TaskType.STANDARD, "Learn Java", Priority.HIGH, LocalDate.now(), null, null, null);
+		tm.createTask(TaskType.STANDARD, "Learn JavaScript", Priority.HIGH, LocalDate.now(), null, null, null);
 
 		assertEquals("Learn Java", tm.getTasks().get(0).getTitle());
 		assertEquals("Learn JavaScript", tm.getTasks().get(1).getTitle());
@@ -57,7 +57,7 @@ public class TaskManagerTest {
 	void shouldMarkTaskAsCompleted() {
 		TaskManager tm = new TaskManager();
 
-		tm.createTask("Learn Java", Priority.HIGH, LocalDate.now());
+		tm.createTask(TaskType.STANDARD, "Learn Java", Priority.HIGH, LocalDate.now(), null, null, null);
 		tm.markTaskCompleted(0);
 		
 		assertEquals(true, tm.getTasks().get(0).isCompleted());
@@ -79,8 +79,8 @@ public class TaskManagerTest {
 	void shouldReturnFalseForIndexOutsideList() {
 		TaskManager tm = new TaskManager();
 		
-		tm.createTask("Learn Java", Priority.HIGH, LocalDate.now());
-		tm.createTask("Learn JavaScript", Priority.HIGH, LocalDate.now());		
+		tm.createTask(TaskType.STANDARD, "Learn Java", Priority.HIGH, LocalDate.now(), null, null, null);
+		tm.createTask(TaskType.STANDARD, "Learn JavaScript", Priority.HIGH, LocalDate.now(), null, null, null);	
 		Boolean isIndexPositive = tm.markTaskCompleted(2);
 		
 		assertEquals(false, isIndexPositive);

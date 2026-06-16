@@ -13,9 +13,26 @@ public class TaskManager {
 		tasks = new ArrayList<>();
 	}
 	
-	public void createTask(String title, Priority priority, LocalDate dueDate) {
-		Task task = new Task(title, priority, dueDate);
-		tasks.add(task);
+	public void createTask(	TaskType type,
+							String title, 
+							Priority priority, 
+							LocalDate dueDate,
+							String reportName,
+							String regulationId,
+							String riskLevel
+						) {
+		switch (type) {
+			case STANDARD:
+				tasks.add(new Task(title, priority, dueDate));
+				break;
+			case REPORTING:
+				tasks.add(new ReportingTask(title, priority, dueDate, reportName));
+				break;
+			case COMPLIANCE:
+				tasks.add(new ComplianceTask(title, priority, dueDate, regulationId, riskLevel));
+				break;
+				
+		}
 	}
 	
 	public ArrayList<Task> getTasks(){
@@ -123,6 +140,17 @@ public class TaskManager {
 		return true;
 	}
 	
+	public boolean updateDueDate(int index, LocalDate dueDate) {
+		if (index < 0 || index >= tasks.size()) {
+			return false;
+		}
+		
+		tasks.get(index).setDueDate(dueDate);
+		saveToFile();
+		
+		return true;
+	}
+	
 	public String getTasksAsString() {
 		if (tasks.isEmpty()) {
 			return "No tasks available.";
@@ -144,7 +172,33 @@ public class TaskManager {
 		try (BufferedWriter writer = new BufferedWriter(new FileWriter("tasks.txt"))) {
 			
 			for (Task task : tasks) {
-				writer.write(task.getTitle() + "|" + task.isCompleted() + "|" + task.getPriority() + "|" + task.getDueDate());
+	            if (task instanceof ReportingTask) {
+	            		ReportingTask rt = (ReportingTask) task;
+	                writer.write("REPORTING|" +
+	                        rt.getTitle() + "|" +
+	                        rt.isCompleted() + "|" +
+	                        rt.getPriority() + "|" +
+	                        rt.getDueDate() + "|" +
+	                        rt.getReportName());
+
+	            } else if (task instanceof ComplianceTask) {
+            		ComplianceTask ct = (ComplianceTask) task;
+	                writer.write("COMPLIANCE|" +
+	                        ct.getTitle() + "|" +
+	                        ct.isCompleted() + "|" +
+	                        ct.getPriority() + "|" +
+	                        ct.getDueDate() + "|" +
+	                        ct.getRegulationId() + "|" +
+	                        ct.getRiskLevel());
+
+	            } else {
+
+	                writer.write("STANDARD|" +
+	                        task.getTitle() + "|" +
+	                        task.isCompleted() + "|" +
+	                        task.getPriority() + "|" +
+	                        task.getDueDate());
+	            }						
 				writer.newLine();
 			}
 			
@@ -168,21 +222,49 @@ public class TaskManager {
 			while ((line = reader.readLine()) != null) {
 				String[] parts = line.split("\\|"); 
 				
-				String title = parts[0];
-				boolean completed = Boolean.parseBoolean(parts[1]);
-				Priority priority = Priority.valueOf(parts[2]);
-				LocalDate dueDate = LocalDate.parse(parts[3]);
-								
-				Task task = new Task(title, priority, dueDate);
+				TaskType type = TaskType.valueOf(parts[0]);
+				String title = parts[1];
+				boolean completed = Boolean.parseBoolean(parts[2]);
+				Priority priority = Priority.valueOf(parts[3]);
+				LocalDate dueDate = LocalDate.parse(parts[4]);
 				
-				if (completed) {
-					task.markAsCompleted();
+				switch (type) {
+					case STANDARD:						
+						Task task = new Task(title, priority, dueDate);						
+						if (completed) {
+							task.markAsCompleted();
+						}						
+						tasks.add(task);
+						break;
+						
+					case REPORTING:
+						String reportName = parts[5];
+						
+						ReportingTask rt = new ReportingTask(title, priority, dueDate, reportName);
+						
+						if (completed) {
+							rt.markAsCompleted();
+						}
+						tasks.add(rt);
+						break;
+						
+					case COMPLIANCE:
+						String regulationId = parts[5];
+						String riskLevel = parts[6];
+						
+						ComplianceTask ct = new ComplianceTask(title, priority, dueDate, regulationId, riskLevel);
+						
+						if (completed) {
+							ct.markAsCompleted();
+						}	
+						tasks.add(ct);
+						break;
 				}
+								
 				
-				tasks.add(task);
 			}
 		} catch (IOException e) {
-			System.out.println("Failed to save!");
+			System.out.println("Failed to load!");
 		}
 
 		

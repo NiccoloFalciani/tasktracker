@@ -2,6 +2,7 @@ package com.tasktracker;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 public class ConsoleUI {
 	
@@ -45,7 +46,7 @@ public class ConsoleUI {
 		
 	}
 	
-	public static void printSlaStatus(ArrayList<Task> tasks) {
+	public static void printSlaOverview(ArrayList<Task> tasks) {
 		
 		long green = tasks.stream()
 				          .filter(task -> task.getSlaStatus() == SlaStatus.GREEN)
@@ -66,12 +67,32 @@ public class ConsoleUI {
 		System.out.println("RED (overdue)		: " + red);				
 	}
 	
+	public static void printCriticalTasks(ArrayList<Task> tasks) {
+		ArrayList<Task> criticalTasks = (ArrayList<Task>) tasks.stream()
+										     .filter(task -> task.getSlaStatus() == SlaStatus.RED)
+										     .collect(Collectors.toCollection(ArrayList<Task>::new));
+
+		System.out.println();
+		System.out.println("🚨 CRITICAL ITEMS");
+		if (criticalTasks.isEmpty()) {
+			System.out.println("No critical tasks available!");
+			return;
+		}
+		
+		for (Task criticalTask : criticalTasks) {
+			System.out.println(criticalTask.getTitle() + " " + "[" + criticalTask.getPriority() + "]");
+		}
+	}	
+	
 	public static void printDashboard(ArrayList<Task> tasks) {
 		
 		
 	    System.out.println("\n================ TASK TRACKER DASHBOARD ================");
 	    printSummary(tasks);
-	    printSlaStatus(tasks);
+	    printSlaOverview(tasks);
+	    printCriticalTasks(tasks);
 	    System.out.println("=========================================================\n");	
 	}
+	
+
 }

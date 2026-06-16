@@ -1,3 +1,3 @@
-Java lernen|false|HIGH|2027-05-29
-GIT lernen|false|HIGH|2027-05-29
-HTML lernen|false|HIGH|2027-01-01
+STANDARD|standard task|false|LOW|2027-06-18
+REPORTING|reporting task test|false|MEDIUM|2027-06-19|test report
+COMPLIANCE|compliance task test|false|HIGH|2027-06-20|22|34
