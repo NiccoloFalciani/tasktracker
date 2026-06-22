@@ -1,3 +1,2 @@
-STANDARD|standard task|false|LOW|2027-06-18
-REPORTING|reporting task test|false|MEDIUM|2027-06-19|test report
-COMPLIANCE|compliance task test|false|HIGH|2027-06-20|22|34
+COMPLIANCE|high risk task|false|HIGH|2027-06-27|66|HIGH
+COMPLIANCE|low risk test|false|LOW|2027-06-22|44|LOW
