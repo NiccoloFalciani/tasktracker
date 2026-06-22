@@ -128,9 +128,32 @@ public class ConsoleUI {
                                                          .map(task -> (ComplianceTask) task)
                                                          .collect(Collectors.toCollection(ArrayList<ComplianceTask>::new));
 		
+		
 		long highRisk = complianceTasks.stream()
 				                       .filter(task -> task.getRiskScore() == 100)
 				                       .count();
+		
+		long mediumRisk = complianceTasks.stream()
+                .filter(task -> task.getRiskScore() == 50)
+                .count();
+		
+		long lowRisk = complianceTasks.stream()
+                .filter(task -> task.getRiskScore() == 10)
+                .count();
+		
+		double averageRisk= 0;
+		
+		if (complianceTasks.size() > 0) {
+			averageRisk = (highRisk * 100 + mediumRisk * 50 + lowRisk * 10)/complianceTasks.size();			
+		} 
+				
+		System.out.println();
+		System.out.println("⚠️ COMPLIANCE RISK OVERVIEW");
+		System.out.println("-----------------------------------------");	
+		System.out.println("High risk compliance tasks      : " + highRisk);				
+		System.out.println("Medium risk compliance tasks    : " + mediumRisk);				
+		System.out.println("Low risk compliance tasks       : " + lowRisk);				
+		System.out.println("Average compliance risk         : " + averageRisk);						
 		
 	}
 	
@@ -142,6 +165,7 @@ public class ConsoleUI {
 	    printSummary(tasks);
 	    printTaskTypeOverview(tasks);
 	    printSlaOverview(tasks);
+	    printComplianceRiskOverview(tasks);
 	    printCriticalTasks(tasks);
 	    System.out.println("=========================================================\n");	
 	}

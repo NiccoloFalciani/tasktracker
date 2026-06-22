@@ -60,8 +60,7 @@ public class Main {
 						System.out.println("Regulation ID: ");
 						regulationId = scanner.nextLine();
 						
-						System.out.println("Risk level:");
-						riskLevel = scanner.nextLine();
+						riskLevel = readComplianceTaskRisk(scanner);
 					}					
 							
 					taskManager.createTask(taskType, title, priority, dueDate, reportName, regulationId, riskLevel);
@@ -204,6 +203,24 @@ public class Main {
 		}
 		
 		return priority;
+	}
+	
+	private static String readComplianceTaskRisk(Scanner scanner) {
+		String complianceTaskRisk = null;
+		
+		while (complianceTaskRisk == null) {
+			System.out.println("Compliance task risk (LOW, MEDIUM or HIGH): "); 
+			String input = scanner.nextLine().toUpperCase();
+
+			if (input.equals("HIGH") || input.equals("MEDIUM") || input.equals("LOW")) {
+				complianceTaskRisk = input;
+			} else {
+				System.out.println("Invalid compliance task risk!");
+			}
+		}
+		
+		return complianceTaskRisk; 
+		
 	}
 	
 	private static LocalDate readDueDate(Scanner scanner, boolean optional) {
