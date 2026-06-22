@@ -18,15 +18,15 @@ public class Main {
 		while (true) {
 			
 			System.out.println("\n=== TASK TRACKER ===");
-			System.out.println("1 - Add task");
-			System.out.println("2 - Show all tasks");
-			System.out.println("3 - Mark task as completed");
-			System.out.println("4 - Delete task");
-			System.out.println("5 - Show open tasks");
-			System.out.println("6 - Show completed tasks");
-			System.out.println("7 - Rename task");
-			System.out.println("8 - Change task priority");
-			System.out.println("9 - Change due date");
+			System.out.println(" 1 - Add task");
+			System.out.println(" 2 - Show all tasks");
+			System.out.println(" 3 - Mark task as completed");
+			System.out.println(" 4 - Delete task");
+			System.out.println(" 5 - Show open tasks");
+			System.out.println(" 6 - Show completed tasks");
+			System.out.println(" 7 - Rename task");
+			System.out.println(" 8 - Change task priority");
+			System.out.println(" 9 - Change due date");
 			System.out.println("10 - Show overdue tasks");
 			System.out.println("11 - Search tasks");
 			System.out.println("12 - Exit application");

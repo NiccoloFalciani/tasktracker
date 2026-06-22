@@ -38,11 +38,12 @@ public class ConsoleUI {
 									 .count();
 		System.out.println();
 		System.out.println("📊 SYSTEM OVERVIEW");
-		System.out.println("Total tasks        : " + total);
-	    System.out.println("Open tasks         : " + open);
-	    System.out.println("Completed tasks    : " + completed);
-	    System.out.println("Overdue tasks      : " + overdue);
-	    System.out.println("High priority open : " + highPriorityOpen);		
+		System.out.println("-----------------------------------------");
+		System.out.println("Total tasks         : " + total);
+	    System.out.println("Open tasks          : " + open);
+	    System.out.println("Completed tasks     : " + completed);
+	    System.out.println("Overdue tasks       : " + overdue);
+	    System.out.println("High priority open  : " + highPriorityOpen);		
 		
 	}
 	
@@ -60,11 +61,18 @@ public class ConsoleUI {
 		          .filter(task -> task.getSlaStatus() == SlaStatus.RED)
 		          .count();
 		
+	    long taskTotalAmount = tasks.size();
+	    double greenPercent = (double) green/taskTotalAmount * 100;
+	    double yellowPercent = (double) yellow/taskTotalAmount * 100;
+	    double redPercent = (double) red/taskTotalAmount * 100;
+		
+		
 		System.out.println();
-		System.out.println("🚦 SLA STATUS");
-		System.out.println("GREEN (on track)	: " + green);		
-		System.out.println("YELLOW (due soon)	: " + yellow);		
-		System.out.println("RED (overdue)		: " + red);				
+		System.out.println("🚦 SLA HEALTH");
+		System.out.println("-----------------------------------------");		
+		System.out.println("On track            : " + green + " (" + String.format("%.0f", greenPercent) + "%)");			
+		System.out.println("Due soon            : " + yellow + " (" + String.format("%.0f", yellowPercent) + "%)");			
+		System.out.println("Overdue             : " + red + " (" + String.format("%.0f", redPercent) + "%)");				
 	}
 	
 	public static void printCriticalTasks(ArrayList<Task> tasks) {
@@ -74,8 +82,10 @@ public class ConsoleUI {
 
 		System.out.println();
 		System.out.println("🚨 CRITICAL ITEMS");
+		System.out.println("-----------------------------------------");
+		
 		if (criticalTasks.isEmpty()) {
-			System.out.println("No critical tasks available!");
+			System.out.println("No critical items detected");
 			return;
 		}
 		
@@ -84,11 +94,53 @@ public class ConsoleUI {
 		}
 	}	
 	
+	public static void printTaskTypeOverview(ArrayList<Task> tasks) {
+	    
+		long standard = tasks.stream()
+				       	     .filter(task -> (!(task instanceof ComplianceTask) && !(task instanceof ReportingTask)))
+				       	     .count();
+		
+		long reporting = tasks.stream()
+	       	     .filter(task -> (task instanceof ReportingTask))
+	       	     .count();	
+		
+		long compliance = tasks.stream()
+	       	     .filter(task -> (task instanceof ComplianceTask))
+	       	     .count();
+		
+	    long taskTotalAmount = tasks.size();
+	    double standardPercent = (double) standard/taskTotalAmount * 100;
+	    double reportingPercent = (double) reporting/taskTotalAmount * 100;
+	    double compliancePercent = (double) compliance/taskTotalAmount * 100;
+		
+		System.out.println();
+		System.out.println("📋 TASK DISTRIBUTION");
+		System.out.println("-----------------------------------------");		
+		System.out.println("Standard tasks      : " + standard + " (" + String.format("%.0f", standardPercent) + "%)");		
+		System.out.println("Reporting tasks     : " + reporting + " (" + String.format("%.0f", reportingPercent)  + "%)");			
+		System.out.println("Compliance tasks    : " +compliance + " (" + String.format("%.0f", compliancePercent)  + "%)");			
+
+	}
+	
+	public static void printComplianceRiskOverview(ArrayList<Task> tasks) {
+		ArrayList<ComplianceTask> complianceTasks = tasks.stream()
+                                                         .filter(task -> (task instanceof ComplianceTask))
+                                                         .map(task -> (ComplianceTask) task)
+                                                         .collect(Collectors.toCollection(ArrayList<ComplianceTask>::new));
+		
+		long highRisk = complianceTasks.stream()
+				                       .filter(task -> task.getRiskScore() == 100)
+				                       .count();
+		
+	}
+	
 	public static void printDashboard(ArrayList<Task> tasks) {
 		
-		
-	    System.out.println("\n================ TASK TRACKER DASHBOARD ================");
+	    System.out.println("=========================================================");
+	    System.out.println("📊 TASK TRACKER DASHBOARD");		
+	    System.out.println("=========================================================");
 	    printSummary(tasks);
+	    printTaskTypeOverview(tasks);
 	    printSlaOverview(tasks);
 	    printCriticalTasks(tasks);
 	    System.out.println("=========================================================\n");	
